@@ -94,4 +94,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: 22
-          script: cd && bash ferryscript.sh
+          script: cd && bash vehiclescript.sh
