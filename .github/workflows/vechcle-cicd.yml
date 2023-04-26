@@ -1,0 +1,57 @@
+name: .NET build & deploy VehicleManagementSystem
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+      
+      #publish VehicleManagement
+      #publish VehicleManagement.API
+    - name: Publish VehicleManagement.API
+      run: |
+        dotnet publish VehicleManagement/VehicleManagement.API/VehicleManagement.API.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.API
+        cd $GITHUB_WORKSPACE 
+        zip -r VehicleManagement.API.zip cd VehicleManagement.API
+    
+      #publish VehicleManagement.Application
+    - name: Publish VehicleManagement.Application
+      run: | 
+        dotnet publish VehicleManagement/VehicleManagement.Application/VehicleManagement.Application.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.Application 
+        cd $GITHUB_WORKSPACE
+        zip -r VehicleManagement.Application.zip VehicleManagement.Application
+      
+      #publish VehicleManagement.Core
+    - name: Publish VehicleManagement.Core
+      run: | 
+        dotnet publish VehicleManagement/VehicleManagement.Core/VehicleManagement.Core.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.Core
+        cd $GITHUB_WORKSPACE
+        zip -r VehicleManagement.Core.zip VehicleManagement.Core
+      #publish VehicleManagement.DataAccess
+    - name: Publish VehicleManagement.DataAccess
+      run: | 
+        dotnet publish VehicleManagement/VehicleManagement.DataAccess/VehicleManagement.DataAccess.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.DataAccess
+        cd $GITHUB_WORKSPACE
+        zip -r VehicleManagement.DataAccess.zip VehicleManagement.DataAccess
+
+    - name: Publish VehicleManagement.Web
+      run: | 
+        dotnet publish WebUI/FerryManagement.Web/FerryManagement.Web.csproj -c Release -o $GITHUB_WORKSPACE/FerryManagement.Web
+        cd $GITHUB_WORKSPACE
+        zip -r FerryManagement.Web.zip FerryManagement.Web
