@@ -43,7 +43,7 @@ jobs:
         dotnet publish VehicleManagement/VehicleManagement.Core/VehicleManagement.Core.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.Core
         cd $GITHUB_WORKSPACE
         zip -r VehicleManagement.Core.zip VehicleManagement.Core
-        
+
       #publish VehicleManagement.DataAccess
     - name: Publish VehicleManagement.DataAccess
       run: | 
@@ -60,9 +60,29 @@ jobs:
         zip -r VehicleManagement.Web.zip VehicleManagement.Web 
 
       #Upload Ferry-Management-System-Zip Artifact
-    - name: Upload Ferry-Management-System-Zip Artifact
+    - name: Upload Vehicle-Management-System-Zip Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
-        name: Ferry-Management-System-Zip
+        name: Vehicle-Management-System-Zip
         path: /home/runner/work/Vehicle-Management-System/Vehicle-Management-System/*.zip
         if-no-files-found: error
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Vehicle-Management-System-Zip Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Vehicle-Management-System-Zip 
+
+      - name: Copy via ssh 
+        uses: garygrossgarten/github-action-scp@v0.8.0
+        with:
+          local: /home/runner/work/Vehicle-Management-System/Vehicle-Management-System
+          remote: /home/azureuser/Vehicle-Management-System-Zip
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
