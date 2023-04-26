@@ -43,6 +43,7 @@ jobs:
         dotnet publish VehicleManagement/VehicleManagement.Core/VehicleManagement.Core.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.Core
         cd $GITHUB_WORKSPACE
         zip -r VehicleManagement.Core.zip VehicleManagement.Core
+        
       #publish VehicleManagement.DataAccess
     - name: Publish VehicleManagement.DataAccess
       run: | 
@@ -50,8 +51,18 @@ jobs:
         cd $GITHUB_WORKSPACE
         zip -r VehicleManagement.DataAccess.zip VehicleManagement.DataAccess
 
+      # publish VehicleManagement.Web 
+
     - name: Publish VehicleManagement.Web
       run: | 
-        dotnet publish WebUI/FerryManagement.Web/FerryManagement.Web.csproj -c Release -o $GITHUB_WORKSPACE/FerryManagement.Web
+        dotnet publish WebUI/VehicleManagement.Web/VehicleManagement.Web.csproj -c Release -o $GITHUB_WORKSPACE/VehicleManagement.Web
         cd $GITHUB_WORKSPACE
-        zip -r FerryManagement.Web.zip FerryManagement.Web
+        zip -r VehicleManagement.Web.zip VehicleManagement.Web 
+
+      #Upload Ferry-Management-System-Zip Artifact
+    - name: Upload Ferry-Management-System-Zip Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: Ferry-Management-System-Zip
+        path: /home/runner/work/EmployeeManagement/EmployeeManagement/*.zip
+        if-no-files-found: error
